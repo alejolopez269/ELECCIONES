@@ -18,8 +18,6 @@
     --cepeda-bg: #e8f5ee;
     --aspriella: #6366f1;
     --aspriella-bg: #e0e7ff;
-    --blanco-c: #4b5563;
-    --blanco-bg: #f3f4f6;
     
     /* UI Colors */
     --azul: #2563eb;
@@ -73,7 +71,7 @@
   #map-div { width: 100%; height: 480px; background: #e5e5e5; border-radius: 8px; z-index: 1; }
   .map-legend { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
   .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--texto-suave); }
-  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; border: 1px solid rgba(0,0,0,0.1); }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
   /* Grid Layouts */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
@@ -81,7 +79,7 @@
 
   /* Scatter Plot */
   .scatter-card { background: white; border: 1px solid var(--gris-borde); border-radius: 10px; padding: 16px; box-shadow: var(--sombra); }
-  #scatter-svg { width: 100%; height: 320px; display: block; }
+  #scatter-svg { width: 100%; height: 340px; display: block; }
   .scatter-dot { cursor: pointer; transition: all 0.1s ease; }
   .scatter-dot:hover { opacity: 0.9; stroke: #000; stroke-width: 1.5; }
 
@@ -100,13 +98,11 @@
   .top-info { flex: 1; min-width: 0; }
   .top-name { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .top-dep { font-size: 11px; color: var(--gris); }
-  .top-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; border: 1px solid transparent; }
   
   /* Status Badges */
   .badge-ganada { background: var(--cepeda-bg); color: var(--cepeda); }
   .badge-adversa { background: var(--aspriella-bg); color: var(--aspriella); }
-  .badge-blanco { background: var(--blanco-bg); color: var(--blanco-c); border-color: #d1d5db; }
-  
+  .top-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
   .top-votos { font-size: 12px; font-weight: 600; color: var(--texto-suave); flex-shrink: 0; }
 
   /* Tables */
@@ -121,11 +117,10 @@
   td { padding: 8px 12px; vertical-align: middle; }
   .td-muni { font-weight: 600; }
   .td-depto { font-size: 11px; color: var(--gris); }
-  .estado-pill { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; border: 1px solid transparent; }
+  .estado-pill { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; }
   
   .pill-ganada { background: var(--cepeda-bg); color: var(--cepeda); }
   .pill-adversa { background: var(--aspriella-bg); color: var(--aspriella); }
-  .pill-blanco { background: var(--blanco-bg); color: var(--blanco-c); border-color: #d1d5db; }
   
   .pct-bar-wrap { display: flex; align-items: center; gap: 6px; }
   .pct-bar-bg { flex: 1; height: 5px; background: var(--gris-claro); border-radius: 3px; overflow: hidden; min-width: 40px; }
@@ -169,7 +164,7 @@
   .dep-bar-bg { flex: 1; height: 4px; background: var(--gris-claro); border-radius: 2px; overflow: hidden; }
   .dep-bar-fill { height: 100%; border-radius: 2px; }
   .dep-pct { font-size: 12px; font-weight: 700; width: 36px; text-align: right; }
-  .dep-mini { font-size: 11px; color: var(--gris); display: flex; gap: 8px; margin-top: 4px; }
+  .dep-mini { font-size: 11px; color: var(--gris); display: flex; gap: 8px; margin-top: 4px; justify-content: space-between;}
 
   /* Navigation Tabs */
   .tabs { display: flex; gap: 4px; margin-bottom: 14px; border-bottom: 2px solid var(--gris-claro); padding-bottom: 0; overflow-x: auto; white-space: nowrap; }
@@ -210,6 +205,10 @@
     </div>
     <div class="header-stats">
       <div class="hstat">
+        <div class="hstat-num" id="h-votos-totales">—</div>
+        <div class="hstat-label">Total Votantes</div>
+      </div>
+      <div class="hstat">
         <div class="hstat-num" id="h-votos-cepeda" style="color:#4ade80">—</div>
         <div class="hstat-label">Votos Cepeda</div>
       </div>
@@ -220,6 +219,10 @@
       <div class="hstat">
         <div class="hstat-num" id="h-votos-blanco" style="color:#d1d5db">—</div>
         <div class="hstat-label">Votos En Blanco</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num" id="h-pct-swing" style="color:#fde047">—</div>
+        <div class="hstat-label">Var. vs 2022</div>
       </div>
     </div>
   </div>
@@ -241,7 +244,6 @@
         <option value="">Cualquiera</option>
         <option value="ganada">Cepeda</option>
         <option value="adversa">Aspriella</option>
-        <option value="disputa">En Blanco</option>
       </select>
     </div>
     <button class="btn-clear" onclick="clearFilters()">Limpiar Filtros</button>
@@ -251,7 +253,6 @@
   <div class="tabs">
     <div class="tab active" data-tab="mapa" onclick="switchTab('mapa')">🗺 Mapa Interactivo</div>
     <div class="tab" data-tab="departamentos" onclick="switchTab('departamentos')">📊 Vista Departamental</div>
-    <div class="tab" data-tab="municipios" onclick="switchTab('municipios')">📋 Data General</div>
     <div class="tab" data-tab="analisis" onclick="switchTab('analisis')">📈 Gráfico Dispersión</div>
     <div class="tab" data-tab="jovenes" onclick="switchTab('jovenes')">📱 Demografía Jóvenes</div>
     <div class="tab" data-tab="volumen" onclick="switchTab('volumen')">🗳️ Volumen de Votos</div>
@@ -262,10 +263,9 @@
     <div class="map-card">
       <div class="section-title">Distribución Territorial <span class="pill">Cartografía Leaflet</span></div>
       <div class="map-controls">
-        <span style="font-size:12px;color:var(--gris);font-weight:600;margin-right:4px;">Métrica de volumen:</span>
+        <span style="font-size:12px;color:var(--gris);font-weight:600;margin-right:4px;">Métrica del Mapa:</span>
         <button class="map-mode-btn active" data-mode="apoyo" onclick="setMapMode('apoyo')">Votantes Totales</button>
         <button class="map-mode-btn" data-mode="swing" onclick="setMapMode('swing')">Variación Histórica</button>
-        <button class="map-mode-btn" data-mode="votos" onclick="setMapMode('votos')">Votos Cepeda</button>
       </div>
       <div id="map-div"></div>
       <div class="map-legend" id="map-legend"></div>
@@ -287,13 +287,15 @@
   <!-- TAB: DEPARTAMENTOS -->
   <div id="tab-departamentos" class="section">
     <div class="section-title">Agrupación Departamental <span class="pill" id="dep-count-pill"></span></div>
+    <p style="font-size:12px;color:var(--gris);margin-bottom:12px">Haz clic en un departamento para filtrar sus municipios en la tabla inferior.</p>
     <div class="dep-grid" id="dep-grid"></div>
-  </div>
 
-  <!-- TAB: MUNICIPIOS -->
-  <div id="tab-municipios" class="section">
-    <div class="table-card">
-      <div class="table-header"><div class="section-title" style="margin:0">Registro de Municipios</div></div>
+    <div class="table-card" style="margin-top: 24px;">
+      <div class="table-header">
+        <div>
+          <div class="section-title" style="margin:0" id="muni-table-title">Municipios (Nacional)</div>
+        </div>
+      </div>
       <div style="overflow-x:auto">
         <table id="muni-table">
           <thead>
@@ -301,9 +303,9 @@
               <th onclick="sortTable('municipio')">Municipio ↕</th>
               <th onclick="sortTable('depto')">Depto ↕</th>
               <th onclick="sortTable('estado')">Mayoría ↕</th>
-              <th onclick="sortTable('cepeda')">% Cepeda ↕</th>
+              <th onclick="sortTable('cepeda')">% Ganador ↕</th>
               <th onclick="sortTable('swing')">Var. Histórica ↕</th>
-              <th onclick="sortTable('votos_cepeda')">Votos Cepeda ↕</th>
+              <th onclick="sortTable('votos_total')">Votantes Totales ↕</th>
               <th onclick="sortTable('joven')">% Jóvenes ↕</th>
             </tr>
           </thead>
@@ -322,7 +324,6 @@
       <svg id="scatter-svg"></svg>
       <div class="map-legend" style="margin-top:10px">
         <div class="legend-item"><div class="legend-dot" style="background:var(--cepeda)"></div> Cepeda</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--blanco-bg); border:1px solid #9ca3af"></div> En Blanco</div>
         <div class="legend-item"><div class="legend-dot" style="background:var(--aspriella)"></div> Aspriella</div>
       </div>
     </div>
@@ -370,7 +371,7 @@
             <tr>
               <th style="color:var(--azul)" onclick="sortVolumen('municipio')">Municipio ↕</th>
               <th style="color:var(--azul)" onclick="sortVolumen('votos_total')">Total Votantes ↕</th>
-              <th style="color:var(--azul)" onclick="sortVolumen('petro22')">% Izq 2022 (Histórico) ↕</th>
+              <th style="color:var(--azul)" onclick="sortVolumen('petro22')">% Izq 2022 ↕</th>
               <th style="color:var(--azul)">Cepeda vs Aspriella</th>
               <th style="color:var(--azul)" onclick="sortVolumen('estado')">Mayoría Actual ↕</th>
               <th style="color:var(--azul)" onclick="sortVolumen('margen')">Brecha (Pts) ↕</th>
@@ -398,7 +399,6 @@ const DEPS = D.departamentos;
 // Config colors matching CSS
 const COL_CEPEDA = '#1a7a4a';
 const COL_ASPRIELLA = '#6366f1';
-const COL_BLANCO = '#e5e7eb'; 
 
 // App State
 let activeFilters = { dep: '', search: '', estado: '' }; 
@@ -416,33 +416,63 @@ let leafletMap;
 let mapCirclesLayer;
 
 function init() {
-  // Cálculo de votos aproximados para el Header Global
-  const totalCepeda = D.resumen.votos_cepeda || 0;
-  let totalAspriella = 0;
-  let totalBlanco = 0;
+  // Preprocesamiento de Data: Forzamos estado binario y calculamos totales
+  let totalVotos = 0, totalCepeda = 0, totalAspriella = 0, totalBlanco = 0, totalPetro22Votes = 0;
 
   MUNIS_ARR.forEach(m => {
-    const pctC = m.cepeda || 0;
-    const pctA = m.derecha || 0;
-    const pctB = Math.max(0, 100 - pctC - pctA);
     const vt = m.votos_total || 0;
+    const vc = m.votos_cepeda || 0;
     
-    totalAspriella += (pctA / 100) * vt;
-    totalBlanco += (pctB / 100) * vt;
+    // Calcular porcentaje de Aspriella si no viene, asumiendo lo que falta a 100
+    m.derecha_calc = m.derecha !== undefined ? m.derecha : (100 - (m.cepeda || 0)).toFixed(1);
+    
+    // Forzamos binario para ganar (El que tenga más %)
+    const cepPct = parseFloat(m.cepeda || 0);
+    const derPct = parseFloat(m.derecha_calc);
+    m.estado = cepPct >= derPct ? 'ganada' : 'adversa';
+    
+    // Totales Nacionales
+    const va = Math.round((derPct / 100) * vt);
+    const vb = Math.max(0, vt - vc - va);
+    
+    totalVotos += vt;
+    totalCepeda += vc;
+    totalAspriella += va;
+    totalBlanco += vb;
+    
+    if (m.petro22 !== undefined) {
+      totalPetro22Votes += (m.petro22 / 100) * vt;
+    }
   });
 
-  document.getElementById('h-votos-cepeda').textContent = fmtVotos(totalCepeda);
-  document.getElementById('h-votos-aspriella').textContent = fmtVotos(Math.round(totalAspriella));
-  document.getElementById('h-votos-blanco').textContent = fmtVotos(Math.round(totalBlanco));
+  // Calculamos el Swing Nacional Real
+  const pctNacCepeda = totalVotos > 0 ? ((totalCepeda / totalVotos) * 100).toFixed(1) : 0;
+  const pctNacPetro22 = totalVotos > 0 ? ((totalPetro22Votes / totalVotos) * 100).toFixed(1) : 0;
+  const swingNacional = (pctNacCepeda - pctNacPetro22).toFixed(1);
+  const swingNacSign = swingNacional >= 0 ? '+' : '';
 
+  // Actualizar Header Global
+  document.getElementById('h-votos-totales').textContent = fmtVotos(totalVotos);
+  document.getElementById('h-votos-cepeda').textContent = fmtVotos(totalCepeda);
+  document.getElementById('h-votos-aspriella').textContent = fmtVotos(totalAspriella);
+  document.getElementById('h-votos-blanco').textContent = fmtVotos(totalBlanco);
+  document.getElementById('h-pct-swing').textContent = `${swingNacSign}${swingNacional} pts`;
+
+  // Popular Selectores de Departamento
   const sel = document.getElementById('f-dep');
   DEPS.sort((a,b) => a.depto.localeCompare(b.depto)).forEach(d => {
+    // Calculamos cuantas alcaldias tiene ganadas c/u dinámicamente
+    const munisDepto = MUNIS_ARR.filter(m => m.dep === d.dep);
+    d.calc_ganadas = munisDepto.filter(m => m.estado === 'ganada').length;
+    d.calc_adversas = munisDepto.filter(m => m.estado === 'adversa').length;
+
     const o = document.createElement('option');
     o.value = d.dep;
     o.textContent = d.depto;
     sel.appendChild(o);
   });
 
+  // Event Listeners
   ['f-dep','f-estado'].forEach(id => {
     document.getElementById(id).addEventListener('change', onFilter);
   });
@@ -476,9 +506,10 @@ function applyFilters(zoomToBounds = false) {
     return true;
   });
 
+  // Ordenamiento base implícito
   filtered.sort((a,b) => {
-    const esA = a.estado === 'disputa' ? 0 : (a.estado === 'ganada' ? 1 : 2);
-    const esB = b.estado === 'disputa' ? 0 : (b.estado === 'ganada' ? 1 : 2);
+    const esA = a.estado === 'ganada' ? 1 : 2;
+    const esB = b.estado === 'ganada' ? 1 : 2;
     if (esA !== esB) return esA - esB;
     return Math.abs(b.swing||0) - Math.abs(a.swing||0);
   });
@@ -495,6 +526,7 @@ function applyFilters(zoomToBounds = false) {
   drawDepGrid();
 }
 
+// ─── LÓGICAS DE ORDENAMIENTO DE TABLAS ───────────────
 function sortTable(col) {
   if (sortCol === col) sortDir *= -1;
   else { sortCol = col; sortDir = -1; }
@@ -519,19 +551,18 @@ function sortVolumen(col) {
   drawAltoImpacto();
 }
 
-// Helpers Design
+// ─── HELPERS VISUALES ────────────────────────────────
 function colorByEstadoStr(e) {
   if (e === 'ganada') return COL_CEPEDA;
-  if (e === 'disputa') return COL_BLANCO;
   return COL_ASPRIELLA;
 }
 
 function estadoLabel(e) {
   if (e === 'ganada') return 'Cepeda';
-  if (e === 'disputa') return 'En Blanco';
   return 'Aspriella';
 }
 
+// ─── LEAFLET MAP ─────────────────────────────────────
 function initLeafletMap() {
   leafletMap = L.map('map-div').setView([4.5709, -74.2973], 5);
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
@@ -557,11 +588,9 @@ function drawMap(zoomToBounds = false) {
   const withCoords = filtered.filter(m => m.lat && m.lon);
   if (withCoords.length === 0) return;
 
-  const maxVotosCepeda = Math.max(1, ...withCoords.map(m => m.votos_cepeda||0));
   const maxVotosTotalMap = Math.max(1, ...withCoords.map(m => m.votos_total||0));
 
   function getR(m) {
-    if (mapMode === 'votos') return 4 + Math.sqrt((m.votos_cepeda||0)/maxVotosCepeda) * 20;
     if (mapMode === 'swing') return 5 + Math.min(Math.abs(m.swing||0)/30, 1) * 15;
     return 4 + Math.sqrt((m.votos_total||0)/maxVotosTotalMap) * 20;
   }
@@ -571,7 +600,7 @@ function drawMap(zoomToBounds = false) {
       const s = m.swing || 0;
       if (s > 3) return COL_CEPEDA;
       if (s < -3) return COL_ASPRIELLA;
-      return COL_BLANCO;
+      return '#e5e7eb'; // Color neutral para variación estable
     }
     return colorByEstadoStr(m.estado);
   }
@@ -585,26 +614,27 @@ function drawMap(zoomToBounds = false) {
     const circle = L.circleMarker([m.lat, m.lon], {
       radius: r,
       fillColor: c,
-      color: m.estado === 'disputa' ? '#9ca3af' : 'white',
-      weight: m.estado === 'disputa' ? 1.5 : 1,
+      color: 'white',
+      weight: 1,
       opacity: 1,
       fillOpacity: 0.75
     });
 
     const swingSign = (m.swing||0) >= 0 ? '+' : '';
+    const ganadorPct = m.estado === 'ganada' ? m.cepeda : m.derecha_calc;
+    
     const tooltipHtml = `
       <div style="font-family:sans-serif;font-size:12px;min-width:140px;">
         <div style="font-weight:bold;margin-bottom:4px;font-size:13px;border-bottom:1px solid #ddd;padding-bottom:4px;">${m.municipio}</div>
         <div style="display:flex;justify-content:space-between;margin-bottom:2px">
           <span style="color:#666">${m.depto}</span>
-          <span style="font-weight:bold;color:${colorByEstadoStr(m.estado)}">${estadoLabel(m.estado)}</span>
         </div>
         <div style="display:flex;justify-content:space-between;margin-bottom:2px">
-          <span style="color:#666">% Cepeda:</span>
-          <span style="font-weight:bold">${m.cepeda}%</span>
+          <span style="color:#666">Ganador:</span>
+          <span style="font-weight:bold;color:${colorByEstadoStr(m.estado)}">${estadoLabel(m.estado)} (${ganadorPct}%)</span>
         </div>
         <div style="display:flex;justify-content:space-between;margin-bottom:2px">
-          <span style="color:#666">Variación:</span>
+          <span style="color:#666">Variación Hist.:</span>
           <span style="font-weight:bold;color:${(m.swing||0)>=0?COL_CEPEDA:COL_ASPRIELLA}">${swingSign}${m.swing||0} pts</span>
         </div>
         <div style="display:flex;justify-content:space-between;">
@@ -625,16 +655,15 @@ function drawMap(zoomToBounds = false) {
   }
 
   const leg = document.getElementById('map-legend');
-  if (mapMode === 'apoyo' || mapMode === 'votos') {
+  if (mapMode === 'apoyo') {
     leg.innerHTML = `
       <div class="legend-item"><div class="legend-dot" style="background:${COL_CEPEDA}"></div> Cepeda</div>
-      <div class="legend-item"><div class="legend-dot" style="background:${COL_BLANCO}; border-color:#9ca3af"></div> En Blanco</div>
       <div class="legend-item"><div class="legend-dot" style="background:${COL_ASPRIELLA}"></div> Aspriella</div>
     `;
   } else {
     leg.innerHTML = `
       <div class="legend-item"><div class="legend-dot" style="background:${COL_CEPEDA}"></div> Crecimiento &gt;3pts</div>
-      <div class="legend-item"><div class="legend-dot" style="background:${COL_BLANCO}; border-color:#9ca3af"></div> Estable</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#e5e7eb; border-color:#9ca3af"></div> Estable</div>
       <div class="legend-item"><div class="legend-dot" style="background:${COL_ASPRIELLA}"></div> Reducción &gt;3pts</div>
     `;
   }
@@ -679,17 +708,16 @@ function drawScatter() {
   }
 
   html += `<text x="${pad.l + iW/2}" y="${H-2}" text-anchor="middle" font-size="11" fill="#6b7280">% Segmento Joven (18-28)</text>`;
-  html += `<text x="10" y="${pad.t + iH/2}" text-anchor="middle" font-size="11" fill="#6b7280" transform="rotate(-90,10,${pad.t+iH/2})">% Cepeda</text>`;
+  html += `<text x="10" y="${pad.t + iH/2}" text-anchor="middle" font-size="11" fill="#6b7280" transform="rotate(-90,10,${pad.t+iH/2})">% Apoyo Cepeda</text>`;
 
   const sortedData = [...withData].sort((a,b) => (b.votos_total||0) - (a.votos_total||0));
 
   sortedData.forEach(m => {
     const x = px(m.joven), y = py(m.cepeda);
     const c = colorByEstadoStr(m.estado);
-    const strokeC = m.estado === 'disputa' ? '#9ca3af' : 'white';
     const r = 3 + Math.sqrt((m.votos_total || 0) / maxVotosTotal) * 18; 
     
-    html += `<circle class="scatter-dot" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${c}" fill-opacity="0.65" stroke="${strokeC}" stroke-width="1"
+    html += `<circle class="scatter-dot" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${c}" fill-opacity="0.65" stroke="white" stroke-width="0.8"
       onmouseenter="showTip(event,'${escHtml(m.municipio)}','${escHtml(m.depto)}',${m.cepeda},${m.votos_total},${m.swing||0},'${m.estado}')"
       onmouseleave="hideTip()"
       onclick="openModal('${m.slug}')"></circle>`;
@@ -748,12 +776,10 @@ function drawAltoImpacto() {
   tbody.innerHTML = topList.map(m => {
     const margenSign = (m.margen||0) >= 0 ? '+' : '';
     const margenColor = (m.margen||0) >= 0 ? 'var(--cepeda)' : 'var(--aspriella)';
+    const pctC = parseFloat(m.cepeda || 0);
+    const pctA = parseFloat(m.derecha_calc);
     
-    const pctC = m.cepeda || 0;
-    const pctA = m.derecha || 0;
-    const votosOtros = Math.round((pctA / 100) * m.votos_total) || 0;
-    
-    // Normalizar para la barra visual (ignorando el blanco para que sume 100%)
+    // Normalizar para la barra visual (ignorando el blanco)
     const pctCNorm = (pctC + pctA > 0) ? (pctC / (pctC + pctA)) * 100 : 0;
     const pctONorm = (pctC + pctA > 0) ? (pctA / (pctC + pctA)) * 100 : 0;
     const petroHtml = m.petro22 !== undefined ? m.petro22 + '%' : '—';
@@ -765,8 +791,8 @@ function drawAltoImpacto() {
         <td style="color:var(--texto-suave)">${petroHtml}</td>
         <td style="min-width:130px;">
           <div style="font-size:11px;color:var(--texto-suave);margin-bottom:3px;display:flex;justify-content:space-between;">
-            <span><b>Cep:</b> ${fmtVotos(m.votos_cepeda)}</span>
-            <span><b>Asp:</b> ${fmtVotos(votosOtros)}</span>
+            <span><b>Cep:</b> ${pctC}%</span>
+            <span><b>Asp:</b> ${pctA}%</span>
           </div>
           <div style="display:flex; height:6px; width:100%; border-radius:3px; overflow:hidden; background:var(--gris-claro)">
             <div style="width:${pctCNorm}%; background:var(--cepeda);"></div>
@@ -809,7 +835,6 @@ function drawResumen() {
   const el = document.getElementById('resumen-filtro');
   const total = filtered.length;
   const ganadas = filtered.filter(m => m.estado === 'ganada').length;
-  const disputa = filtered.filter(m => m.estado === 'disputa').length;
   const adversas = filtered.filter(m => m.estado === 'adversa').length;
   const totalVotos = filtered.reduce((s,m) => s+(m.votos_total||0), 0);
   const totalVotosCep = filtered.reduce((s,m) => s+(m.votos_cepeda||0), 0);
@@ -819,7 +844,6 @@ function drawResumen() {
     <div style="margin-bottom:8px"><b>${total}</b> entidades territoriales analizadas</div>
     <div>🟩 Mayoría Cepeda: <b>${ganadas}</b></div>
     <div>🟪 Mayoría Aspriella: <b>${adversas}</b></div>
-    <div>⬜ En Blanco: <b>${disputa}</b></div>
     <div style="margin-top:8px">🗳 Total Votantes (Filtro): <b>${fmtVotos(totalVotos)}</b></div>
     <div>% Captación Cepeda: <b>${pct}%</b></div>
   `;
@@ -842,10 +866,9 @@ function drawDepGrid() {
         <div class="dep-pct" style="color:${d.cepeda>=50?COL_CEPEDA:COL_ASPRIELLA}">${d.cepeda}%</div>
       </div>
       <div class="dep-mini">
-        <span style="color:${COL_CEPEDA}">🟩${d.ganadas}</span>
-        <span style="color:${COL_BLANCO}">⬜${d.disputa}</span>
-        <span style="color:${COL_ASPRIELLA}">🟪${d.adversas}</span>
-        <span>${fmtVotos(d.votos_cepeda)} vts</span>
+        <span style="color:${COL_CEPEDA}">🟩${d.calc_ganadas||0}</span>
+        <span style="color:${COL_ASPRIELLA}">🟪${d.calc_adversas||0}</span>
+        <span>${fmtVotos(d.votos_total)} vts</span>
       </div>
     </div>
   `).join('');
@@ -855,20 +878,32 @@ function selectDep(dep) {
   const sel = document.getElementById('f-dep');
   if (activeFilters.dep === dep) { sel.value = ''; activeFilters.dep = ''; } 
   else { sel.value = dep; activeFilters.dep = dep; }
+  
+  // Cambiar título de la tabla inferior
+  const titleEl = document.getElementById('muni-table-title');
+  if (activeFilters.dep) {
+    const depName = DEPS.find(d => d.dep === activeFilters.dep)?.depto || '';
+    titleEl.textContent = `Municipios de ${depName}`;
+  } else {
+    titleEl.textContent = 'Municipios (Nacional)';
+  }
+
   currentPage = 1;
   applyFilters(true);
 }
 
+// ─── TABLA PRINCIPAL (AHORA DENTRO DE DEPARTAMENTOS) ─
 function drawTable() {
   const tbody = document.getElementById('muni-tbody');
   const start = (currentPage-1) * PAGE_SIZE;
   const page = filtered.slice(start, start + PAGE_SIZE);
 
   tbody.innerHTML = page.map(m => {
-    const barW = Math.min(m.cepeda, 100);
     const barColor = colorByEstadoStr(m.estado);
     const swingClass = (m.swing||0) >= 0 ? 'swing-pos' : 'swing-neg';
     const swingSign = (m.swing||0) >= 0 ? '+' : '';
+    const ganadorPct = m.estado === 'ganada' ? m.cepeda : m.derecha_calc;
+
     return `
       <tr onclick="openModal('${m.slug}')">
         <td><div class="td-muni">${m.municipio}</div></td>
@@ -876,12 +911,12 @@ function drawTable() {
         <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
         <td>
           <div class="pct-bar-wrap">
-            <b>${m.cepeda}%</b>
-            <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:${barW}%;background:${barColor}"></div></div>
+            <b>${ganadorPct}%</b>
+            <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:${Math.min(ganadorPct, 100)}%;background:${barColor}"></div></div>
           </div>
         </td>
         <td><span class="${swingClass}">${swingSign}${m.swing||'—'} pts</span></td>
-        <td>${fmtVotos(m.votos_cepeda)}</td>
+        <td>${fmtVotos(m.votos_total)}</td>
         <td>${m.joven !== null ? m.joven+'%' : '—'}</td>
       </tr>
     `;
@@ -916,22 +951,24 @@ function goPage(p) {
   drawTable();
 }
 
+// ─── MODAL DE DETALLE ────────────────────────────────
 function openModal(slug) {
   const m = MUNIS_ARR.find(x => x.slug === slug);
   if (!m) return;
 
   document.getElementById('modal-title').textContent = m.municipio;
-  document.getElementById('modal-sub').textContent = `${m.depto} · ${estadoLabel(m.estado)}`;
+  document.getElementById('modal-sub').textContent = `${m.depto} · Mayoría ${estadoLabel(m.estado)}`;
 
   const cepedaPct = m.cepeda || 0;
-  const derechaPct = m.derecha || (100 - cepedaPct).toFixed(1);
+  const derechaPct = m.derecha_calc;
   const swingSign = (m.swing||0) >= 0 ? '+' : '';
+  const ganadorPct = m.estado === 'ganada' ? cepedaPct : derechaPct;
 
   document.getElementById('modal-body').innerHTML = `
     <div class="modal-stats">
       <div class="mstat">
-        <div class="mstat-num" style="color:${colorByEstadoStr(m.estado)}">${cepedaPct}%</div>
-        <div class="mstat-label">% Cepeda</div>
+        <div class="mstat-num" style="color:${colorByEstadoStr(m.estado)}">${ganadorPct}%</div>
+        <div class="mstat-label">% Ganador</div>
       </div>
       <div class="mstat">
         <div class="mstat-num" style="color:${(m.swing||0)>=0?COL_CEPEDA:COL_ASPRIELLA}">${swingSign}${m.swing||0} pts</div>
@@ -1003,7 +1040,7 @@ function switchTab(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === 'tab-'+name));
   if (name === 'mapa' && leafletMap) leafletMap.invalidateSize(); 
   if (name === 'analisis') drawScatter();
-  if (name === 'municipios') drawTable();
+  if (name === 'departamentos') drawTable();
 }
 
 function fmtVotos(n) {
