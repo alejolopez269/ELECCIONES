@@ -18,20 +18,20 @@
     --cepeda-bg: #e8f5ee;
     --aspriella: #6366f1;
     --aspriella-bg: #e0e7ff;
-    --blanco-c: #6b7280;
+    --blanco-c: #4b5563;
     --blanco-bg: #f3f4f6;
     
     /* Paleta Demografía */
-    --morado: #6366f1;
-    --morado-bg: #e0e7ff;
-    --naranja: #f59e0b; /* Color para Adultos Mayores */
+    --demo-joven: #ef4444; /* Rojo */
+    --demo-joven-bg: #fee2e2;
+    --demo-adulto: #3b82f6; /* Azul */
+    --demo-mayor: #f59e0b; /* Naranja */
     
     /* UI Colors */
     --azul: #2563eb;
     --azul-bg: #dbeafe;
     --gris: #6b7280;
-    --gris-claro: #e5e7eb;
-    --gris-fondo: #f3f4f6;
+    --gris-claro: #f3f4f6;
     --gris-borde: #e5e7eb;
     --texto: #111827;
     --texto-suave: #4b5563;
@@ -64,12 +64,12 @@
   input[type="text"] { width: 180px; }
   .filter-group { display: flex; align-items: center; gap: 6px; }
   .btn-clear { background: none; border: 1px solid var(--gris-borde); border-radius: 6px; padding: 6px 12px; font-size: 12px; color: var(--gris); cursor: pointer; margin-left: auto; }
-  .btn-clear:hover { background: var(--gris-fondo); }
+  .btn-clear:hover { background: var(--gris-claro); }
   .results-count { font-size: 12px; color: var(--gris); margin-left: 4px; white-space: nowrap; }
 
   /* Typography */
   .section-title { font-size: 15px; font-weight: 700; color: var(--texto); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-  .section-title span.pill { font-size: 11px; font-weight: 600; background: var(--gris-fondo); color: var(--gris); padding: 2px 8px; border-radius: 20px; }
+  .section-title span.pill { font-size: 11px; font-weight: 600; background: var(--gris-claro); color: var(--gris); padding: 2px 8px; border-radius: 20px; }
 
   /* Leaflet Map */
   .map-card { background: white; border: 1px solid var(--gris-borde); border-radius: 10px; padding: 16px; margin-bottom: 16px; box-shadow: var(--sombra); }
@@ -99,9 +99,9 @@
 
   /* Top Lists */
   .top-card { background: white; border: 1px solid var(--gris-borde); border-radius: 10px; padding: 16px; box-shadow: var(--sombra); overflow-y: auto; max-height: 320px; }
-  .top-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--gris-fondo); cursor: pointer; transition: background 0.1s; border-radius: 4px; }
+  .top-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--gris-claro); cursor: pointer; transition: background 0.1s; border-radius: 4px; }
   .top-item:last-child { border-bottom: none; }
-  .top-item:hover { background: var(--gris-fondo); padding-left: 6px; }
+  .top-item:hover { background: var(--gris-claro); padding-left: 6px; }
   .top-rank { font-size: 11px; font-weight: 700; color: var(--gris); width: 18px; text-align: center; flex-shrink: 0; }
   .top-info { flex: 1; min-width: 0; }
   .top-name { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -118,9 +118,9 @@
   .table-card { background: white; border: 1px solid var(--gris-borde); border-radius: 10px; margin-bottom: 16px; box-shadow: var(--sombra); overflow: hidden; }
   .table-header { padding: 14px 16px; border-bottom: 1px solid var(--gris-borde); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
-  thead th { background: var(--gris-fondo); padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto-suave); cursor: pointer; white-space: nowrap; user-select: none; }
+  thead th { background: var(--gris-claro); padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto-suave); cursor: pointer; white-space: nowrap; user-select: none; }
   thead th:hover { background: #e5e7eb; }
-  tbody tr { border-bottom: 1px solid var(--gris-fondo); cursor: pointer; transition: background 0.1s; }
+  tbody tr { border-bottom: 1px solid var(--gris-claro); cursor: pointer; transition: background 0.1s; }
   tbody tr:hover { background: #f8faf9; }
   tbody tr:last-child { border-bottom: none; }
   td { padding: 8px 12px; vertical-align: middle; }
@@ -138,7 +138,7 @@
   .swing-neg { color: var(--aspriella); font-weight: 600; }
   .pagination { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-top: 1px solid var(--gris-borde); flex-wrap: wrap; }
   .page-btn { padding: 4px 10px; border: 1px solid var(--gris-borde); border-radius: 5px; background: white; cursor: pointer; font-size: 12px; color: var(--texto-suave); }
-  .page-btn:hover { background: var(--gris-fondo); }
+  .page-btn:hover { background: var(--gris-claro); }
   .page-btn.active { background: var(--texto); color: white; border-color: var(--texto); font-weight: 700; }
   .page-btn:disabled { opacity: 0.4; cursor: default; }
 
@@ -149,11 +149,11 @@
   .modal-header { padding: 20px 20px 14px; border-bottom: 1px solid var(--gris-borde); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
   .modal-title { font-size: 18px; font-weight: 700; }
   .modal-sub { font-size: 13px; color: var(--gris); margin-top: 2px; }
-  .modal-close { background: var(--gris-fondo); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 16px; color: var(--gris); flex-shrink: 0; transition: background 0.1s; }
+  .modal-close { background: var(--gris-claro); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 16px; color: var(--gris); flex-shrink: 0; transition: background 0.1s; }
   .modal-close:hover { background: #e5e7eb; }
   .modal-body { padding: 20px; }
   .modal-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
-  .mstat { background: var(--gris-fondo); border-radius: 8px; padding: 10px 12px; text-align: center; border: 1px solid var(--gris-borde); }
+  .mstat { background: var(--gris-claro); border-radius: 8px; padding: 10px 12px; text-align: center; border: 1px solid var(--gris-borde); }
   .mstat-num { font-size: 20px; font-weight: 700; line-height: 1; }
   .mstat-label { font-size: 11px; color: var(--gris); margin-top: 2px; }
 
@@ -170,7 +170,7 @@
   .dep-mini { font-size: 11px; color: var(--gris); display: flex; gap: 8px; margin-top: 4px; justify-content: space-between;}
 
   /* Navigation Tabs */
-  .tabs { display: flex; gap: 4px; margin-bottom: 14px; border-bottom: 2px solid var(--gris-fondo); padding-bottom: 0; overflow-x: auto; white-space: nowrap; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 14px; border-bottom: 2px solid var(--gris-claro); padding-bottom: 0; overflow-x: auto; white-space: nowrap; }
   .tab { padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--gris); transition: all 0.15s; flex-shrink: 0; }
   .tab.active { color: var(--texto); border-bottom-color: var(--texto); }
   .tab:hover { color: var(--texto); }
@@ -222,10 +222,6 @@
       <div class="hstat">
         <div class="hstat-num" id="h-votos-blanco" style="color:#d1d5db">—</div>
         <div class="hstat-label">Votos En Blanco</div>
-      </div>
-      <div class="hstat">
-        <div class="hstat-num" id="h-pct-swing" style="color:#fde047">—</div>
-        <div class="hstat-label">Var. vs 2022</div>
       </div>
     </div>
   </div>
@@ -334,9 +330,9 @@
   <!-- TAB: JOVENES -->
   <div id="tab-jovenes" class="section">
     <div class="table-card">
-      <div class="table-header" style="background:var(--morado-bg); border-bottom:1px solid #c7d2fe;">
+      <div class="table-header" style="background:var(--demo-joven-bg); border-bottom:1px solid #fca5a5;">
         <div>
-          <div class="section-title" style="margin:0; color:var(--morado)">Demografía: Distribución Etaria</div>
+          <div class="section-title" style="margin:0; color:var(--demo-joven)">Demografía: Segmento Joven (18-28 años)</div>
           <p style="font-size:12px;color:var(--texto-suave);margin-top:2px">Clasificación territorial según composición poblacional. Datos ordenables por la proporción de jóvenes (18-28 años).</p>
         </div>
       </div>
@@ -344,11 +340,11 @@
         <table>
           <thead>
             <tr>
-              <th style="color:var(--morado)" onclick="sortJovenes('municipio')">Municipio ↕</th>
-              <th style="color:var(--morado)" onclick="sortJovenes('depto')">Depto ↕</th>
-              <th style="color:var(--morado)" onclick="sortJovenes('joven')">Composición Demográfica (Jóv - Otr - May) ↕</th>
-              <th style="color:var(--morado)" onclick="sortJovenes('estado')">Mayoría Actual ↕</th>
-              <th style="color:var(--morado)" onclick="sortJovenes('votos_total')">Votantes Totales ↕</th>
+              <th style="color:var(--demo-joven)" onclick="sortJovenes('municipio')">Municipio ↕</th>
+              <th style="color:var(--demo-joven)" onclick="sortJovenes('depto')">Depto ↕</th>
+              <th style="color:var(--demo-joven)" onclick="sortJovenes('joven')">Composición Demográfica (Jóv - Adult - May) ↕</th>
+              <th style="color:var(--demo-joven)" onclick="sortJovenes('estado')">Mayoría Actual ↕</th>
+              <th style="color:var(--demo-joven)" onclick="sortJovenes('votos_total')">Votantes Totales ↕</th>
             </tr>
           </thead>
           <tbody id="jovenes-tbody"></tbody>
@@ -400,7 +396,6 @@ const DEPS = D.departamentos;
 // Config colors matching CSS
 const COL_CEPEDA = '#1a7a4a';
 const COL_ASPRIELLA = '#6366f1';
-const COL_BLANCO = '#e5e7eb'; 
 
 // App State
 let activeFilters = { dep: '', search: '', estado: '' }; 
@@ -419,7 +414,7 @@ let mapCirclesLayer;
 
 function init() {
   // Preprocesamiento de Data: Forzamos estado binario y calculamos totales
-  let totalVotos = 0, totalCepeda = 0, totalAspriella = 0, totalBlanco = 0, totalPetro22Votes = 0;
+  let totalVotos = 0, totalCepeda = 0, totalAspriella = 0, totalBlanco = 0;
 
   MUNIS_ARR.forEach(m => {
     const vt = m.votos_total || 0;
@@ -441,24 +436,13 @@ function init() {
     totalCepeda += vc;
     totalAspriella += va;
     totalBlanco += vb;
-    
-    if (m.petro22 !== undefined) {
-      totalPetro22Votes += (m.petro22 / 100) * vt;
-    }
   });
-
-  // Calculamos el Swing Nacional Real
-  const pctNacCepeda = totalVotos > 0 ? ((totalCepeda / totalVotos) * 100).toFixed(1) : 0;
-  const pctNacPetro22 = totalVotos > 0 ? ((totalPetro22Votes / totalVotos) * 100).toFixed(1) : 0;
-  const swingNacional = (pctNacCepeda - pctNacPetro22).toFixed(1);
-  const swingNacSign = swingNacional >= 0 ? '+' : '';
 
   // Actualizar Header Global
   document.getElementById('h-votos-totales').textContent = fmtVotos(totalVotos);
   document.getElementById('h-votos-cepeda').textContent = fmtVotos(totalCepeda);
   document.getElementById('h-votos-aspriella').textContent = fmtVotos(totalAspriella);
   document.getElementById('h-votos-blanco').textContent = fmtVotos(totalBlanco);
-  document.getElementById('h-pct-swing').textContent = `${swingNacSign}${swingNacional} pts`;
 
   // Popular Selectores de Departamento
   const sel = document.getElementById('f-dep');
@@ -602,7 +586,7 @@ function drawMap(zoomToBounds = false) {
       const s = m.swing || 0;
       if (s > 3) return COL_CEPEDA;
       if (s < -3) return COL_ASPRIELLA;
-      return '#e5e7eb'; 
+      return '#e5e7eb'; // Color neutral para variación estable
     }
     return colorByEstadoStr(m.estado);
   }
@@ -665,7 +649,7 @@ function drawMap(zoomToBounds = false) {
   } else {
     leg.innerHTML = `
       <div class="legend-item"><div class="legend-dot" style="background:${COL_CEPEDA}"></div> Crecimiento &gt;3pts</div>
-      <div class="legend-item"><div class="legend-dot" style="background:#e5e7eb; border-color:#9ca3af"></div> Estable</div>
+      <div class="legend-item"><div class="legend-dot" style="background:#e5e7eb; border:1px solid #9ca3af"></div> Estable</div>
       <div class="legend-item"><div class="legend-dot" style="background:${COL_ASPRIELLA}"></div> Reducción &gt;3pts</div>
     `;
   }
@@ -757,13 +741,14 @@ function drawFocoJoven() {
         <td><div class="td-depto">${m.depto}</div></td>
         <td style="min-width:140px;">
           <div style="font-size:11px;color:var(--texto-suave);margin-bottom:3px;display:flex;justify-content:space-between;">
-            <span style="color:var(--morado)"><b>Jóv:</b> ${j}%</span>
-            <span style="color:var(--naranja)"><b>May:</b> ${may}%</span>
+            <span style="color:var(--demo-joven)"><b>Jóv:</b> ${j}%</span>
+            <span style="color:var(--demo-adulto)"><b>Otr:</b> ${otr}%</span>
+            <span style="color:var(--demo-mayor)"><b>May:</b> ${may}%</span>
           </div>
           <div style="display:flex; height:6px; width:100%; border-radius:3px; overflow:hidden;">
-            <div style="width:${j}%; background:var(--morado);"></div>
-            <div style="width:${otr}%; background:var(--gris-claro);"></div>
-            <div style="width:${may}%; background:var(--naranja);"></div>
+            <div style="width:${j}%; background:var(--demo-joven);"></div>
+            <div style="width:${otr}%; background:var(--demo-adulto);"></div>
+            <div style="width:${may}%; background:var(--demo-mayor);"></div>
           </div>
         </td>
         <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
@@ -988,14 +973,14 @@ function openModal(slug) {
     demoHtml = `
       <div style="margin-bottom: 12px; margin-top: 16px;">
         <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:4px;">
-          <span style="color:var(--morado)"><b>Jóvenes:</b> ${j}%</span>
-          <span style="color:var(--gris)"><b>Otros:</b> ${otr}%</span>
-          <span style="color:var(--naranja)"><b>Mayores:</b> ${may}%</span>
+          <span style="color:var(--demo-joven)"><b>Jóvenes:</b> ${j}%</span>
+          <span style="color:var(--demo-adulto)"><b>Adultos:</b> ${otr}%</span>
+          <span style="color:var(--demo-mayor)"><b>Mayores:</b> ${may}%</span>
         </div>
         <div style="display:flex; height:10px; width:100%; border-radius:5px; overflow:hidden;">
-          <div style="width:${j}%; background:var(--morado);"></div>
-          <div style="width:${otr}%; background:var(--gris-claro);"></div>
-          <div style="width:${may}%; background:var(--naranja);"></div>
+          <div style="width:${j}%; background:var(--demo-joven);"></div>
+          <div style="width:${otr}%; background:var(--demo-adulto);"></div>
+          <div style="width:${may}%; background:var(--demo-mayor);"></div>
         </div>
       </div>
     `;
