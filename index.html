@@ -18,8 +18,8 @@
     --cepeda-bg: #e8f5ee;
     --aspriella: #6366f1;
     --aspriella-bg: #e0e7ff;
-    --blanco-c: #6b7280;
-    --blanco-bg: #f9fafb;
+    --blanco-c: #4b5563; /* Gris oscuro para el texto "En Blanco" */
+    --blanco-bg: #f3f4f6; /* Gris muy claro para el fondo */
     
     /* UI Colors */
     --azul: #2563eb;
@@ -100,12 +100,12 @@
   .top-info { flex: 1; min-width: 0; }
   .top-name { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .top-dep { font-size: 11px; color: var(--gris); }
-  .top-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; border: 1px solid transparent; }
   
   /* Status Badges */
   .badge-ganada { background: var(--cepeda-bg); color: var(--cepeda); }
   .badge-adversa { background: var(--aspriella-bg); color: var(--aspriella); }
-  .badge-disputa { background: var(--blanco-bg); color: var(--blanco-c); border-color: #d1d5db; }
+  .badge-blanco { background: var(--blanco-bg); color: var(--blanco-c); border: 1px solid #d1d5db; }
+  .top-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
   
   .top-votos { font-size: 12px; font-weight: 600; color: var(--texto-suave); flex-shrink: 0; }
 
@@ -121,11 +121,11 @@
   td { padding: 8px 12px; vertical-align: middle; }
   .td-muni { font-weight: 600; }
   .td-depto { font-size: 11px; color: var(--gris); }
-  .estado-pill { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; border: 1px solid transparent; }
+  .estado-pill { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; }
   
   .pill-ganada { background: var(--cepeda-bg); color: var(--cepeda); }
   .pill-adversa { background: var(--aspriella-bg); color: var(--aspriella); }
-  .pill-disputa { background: var(--blanco-bg); color: var(--blanco-c); border-color: #d1d5db; }
+  .pill-blanco { background: var(--blanco-bg); color: var(--blanco-c); border: 1px solid #d1d5db; }
   
   .pct-bar-wrap { display: flex; align-items: center; gap: 6px; }
   .pct-bar-bg { flex: 1; height: 5px; background: var(--gris-claro); border-radius: 3px; overflow: hidden; min-width: 40px; }
@@ -210,16 +210,16 @@
     </div>
     <div class="header-stats">
       <div class="hstat">
-        <div class="hstat-num" id="h-votos">—</div>
+        <div class="hstat-num" id="h-votos-totales">—</div>
+        <div class="hstat-label">Total Votantes</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num" id="h-votos-cepeda">—</div>
         <div class="hstat-label">Votos Cepeda</div>
       </div>
       <div class="hstat">
-        <div class="hstat-num" id="h-pct">—</div>
-        <div class="hstat-label">% Nacional</div>
-      </div>
-      <div class="hstat">
-        <div class="hstat-num" id="h-ganadas">—</div>
-        <div class="hstat-label">Municipios Cepeda</div>
+        <div class="hstat-num" id="h-pct-cepeda">—</div>
+        <div class="hstat-label">% Cepeda</div>
       </div>
     </div>
   </div>
@@ -239,9 +239,9 @@
       <label>Mayoría Electoral</label>
       <select id="f-estado">
         <option value="">Cualquiera</option>
-        <option value="ganada">Cepeda</option>
-        <option value="adversa">Aspriella</option>
-        <option value="disputa">Empate / Blanco</option>
+        <option value="ganada">Mayoría Cepeda</option>
+        <option value="adversa">Mayoría Aspriella</option>
+        <option value="disputa">En Blanco</option>
       </select>
     </div>
     <button class="btn-clear" onclick="clearFilters()">Limpiar Filtros</button>
@@ -322,7 +322,7 @@
       <svg id="scatter-svg"></svg>
       <div class="map-legend" style="margin-top:10px">
         <div class="legend-item"><div class="legend-dot" style="background:var(--cepeda)"></div> Cepeda</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--blanco-bg); border:1px solid #9ca3af"></div> Blanco/Empate</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--blanco-bg); border:1px solid #9ca3af"></div> En Blanco</div>
         <div class="legend-item"><div class="legend-dot" style="background:var(--aspriella)"></div> Aspriella</div>
       </div>
     </div>
@@ -346,7 +346,7 @@
               <th style="color:var(--morado)" onclick="sortJovenes('joven')">% Jóvenes ↕</th>
               <th style="color:var(--morado)" onclick="sortJovenes('estado')">Mayoría Actual ↕</th>
               <th style="color:var(--morado)" onclick="sortJovenes('votos_total')">Votantes Totales ↕</th>
-              <th style="color:var(--morado)" onclick="sortJovenes('votos_cepeda')">Votos Cepeda ↕</th>
+              <th style="color:var(--morado)" onclick="sortJovenes('petro22')">% Izquierda 2022 ↕</th>
             </tr>
           </thead>
           <tbody id="jovenes-tbody"></tbody>
@@ -370,7 +370,7 @@
             <tr>
               <th style="color:var(--azul)" onclick="sortVolumen('municipio')">Municipio ↕</th>
               <th style="color:var(--azul)" onclick="sortVolumen('votos_total')">Total Votantes ↕</th>
-              <th style="color:var(--azul)" onclick="sortVolumen('votos_cepeda')">Votos Cepeda ↕</th>
+              <th style="color:var(--azul)" onclick="sortVolumen('petro22')">% Izq 2022 (Histórico) ↕</th>
               <th style="color:var(--azul)">Cepeda vs Aspriella</th>
               <th style="color:var(--azul)" onclick="sortVolumen('estado')">Mayoría Actual ↕</th>
               <th style="color:var(--azul)" onclick="sortVolumen('margen')">Brecha (Pts) ↕</th>
@@ -398,7 +398,7 @@ const DEPS = D.departamentos;
 // Config colors matching CSS
 const COL_CEPEDA = '#1a7a4a';
 const COL_ASPRIELLA = '#6366f1';
-const COL_BLANCO = '#e5e7eb'; // Borde o color base para empate/blanco
+const COL_BLANCO = '#e5e7eb'; 
 
 // App State
 let activeFilters = { dep: '', search: '', estado: '' }; 
@@ -416,10 +416,9 @@ let leafletMap;
 let mapCirclesLayer;
 
 function init() {
-  document.getElementById('h-votos').textContent = fmtVotos(D.resumen.votos_cepeda);
-  document.getElementById('h-pct').textContent = D.resumen.cepeda + '%';
-  const ganadas = MUNIS_ARR.filter(m => m.estado === 'ganada').length;
-  document.getElementById('h-ganadas').textContent = ganadas;
+  document.getElementById('h-votos-totales').textContent = fmtVotos(D.resumen.votos_total);
+  document.getElementById('h-votos-cepeda').textContent = fmtVotos(D.resumen.votos_cepeda);
+  document.getElementById('h-pct-cepeda').textContent = D.resumen.cepeda + '%';
 
   const sel = document.getElementById('f-dep');
   DEPS.sort((a,b) => a.depto.localeCompare(b.depto)).forEach(d => {
@@ -514,7 +513,7 @@ function colorByEstadoStr(e) {
 
 function estadoLabel(e) {
   if (e === 'ganada') return 'Cepeda';
-  if (e === 'disputa') return 'Blanco/Empate';
+  if (e === 'disputa') return 'En Blanco';
   return 'Aspriella';
 }
 
@@ -614,7 +613,7 @@ function drawMap(zoomToBounds = false) {
   if (mapMode === 'apoyo' || mapMode === 'votos') {
     leg.innerHTML = `
       <div class="legend-item"><div class="legend-dot" style="background:${COL_CEPEDA}"></div> Cepeda</div>
-      <div class="legend-item"><div class="legend-dot" style="background:${COL_BLANCO}; border-color:#9ca3af"></div> Blanco/Empate</div>
+      <div class="legend-item"><div class="legend-dot" style="background:${COL_BLANCO}; border-color:#9ca3af"></div> En Blanco</div>
       <div class="legend-item"><div class="legend-dot" style="background:${COL_ASPRIELLA}"></div> Aspriella</div>
     `;
   } else {
@@ -691,6 +690,7 @@ function drawFocoJoven() {
   
   conJovenes.sort((a,b) => {
     let av = a[sortColJoven], bv = b[sortColJoven];
+    if (sortColJoven === 'petro22') { av = av || 0; bv = bv || 0; }
     if (typeof av === 'string') return sortDirJoven * av.localeCompare(bv||'');
     return sortDirJoven * ((av||0) - (bv||0));
   });
@@ -708,7 +708,7 @@ function drawFocoJoven() {
       <td><b style="color:var(--morado);font-size:14px">${m.joven}%</b></td>
       <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
       <td><b>${fmtVotos(m.votos_total)}</b></td>
-      <td>${fmtVotos(m.votos_cepeda)}</td>
+      <td style="color:var(--texto-suave)">${m.petro22 !== undefined ? m.petro22 + '%' : '—'}</td>
     </tr>
   `).join('');
 }
@@ -719,6 +719,7 @@ function drawAltoImpacto() {
   
   list.sort((a,b) => {
     let av = a[sortColVolumen], bv = b[sortColVolumen];
+    if (sortColVolumen === 'petro22') { av = av || 0; bv = bv || 0; }
     if (typeof av === 'string') return sortDirVolumen * av.localeCompare(bv||'');
     return sortDirVolumen * ((av||0) - (bv||0));
   });
@@ -735,12 +736,13 @@ function drawAltoImpacto() {
     const votosOtros = Math.max(0, (m.votos_total || 0) - (m.votos_cepeda || 0));
     const pctC = m.votos_total > 0 ? ((m.votos_cepeda / m.votos_total) * 100).toFixed(1) : 0;
     const pctO = (100 - pctC).toFixed(1);
+    const petroHtml = m.petro22 !== undefined ? m.petro22 + '%' : '—';
 
     return `
       <tr onclick="openModal('${m.slug}')">
         <td><div class="td-muni">${m.municipio}</div><div class="td-depto">${m.depto}</div></td>
         <td><b style="color:var(--azul);font-size:14px">${fmtVotos(m.votos_total)}</b></td>
-        <td>${fmtVotos(m.votos_cepeda)}</td>
+        <td style="color:var(--texto-suave)">${petroHtml}</td>
         <td style="min-width:130px;">
           <div style="font-size:11px;color:var(--texto-suave);margin-bottom:3px;display:flex;justify-content:space-between;">
             <span><b>Cep:</b> ${fmtVotos(m.votos_cepeda)}</span>
@@ -797,7 +799,7 @@ function drawResumen() {
     <div style="margin-bottom:8px"><b>${total}</b> entidades territoriales analizadas</div>
     <div>🟩 Mayoría Cepeda: <b>${ganadas}</b></div>
     <div>🟪 Mayoría Aspriella: <b>${adversas}</b></div>
-    <div>⬜ Blanco / Empate: <b>${disputa}</b></div>
+    <div>⬜ En Blanco: <b>${disputa}</b></div>
     <div style="margin-top:8px">🗳 Total Votantes (Filtro): <b>${fmtVotos(totalVotos)}</b></div>
     <div>% Captación Cepeda: <b>${pct}%</b></div>
   `;
@@ -944,7 +946,7 @@ function openModal(slug) {
       <div>📊 Votos Cepeda: <b>${fmtVotos(m.votos_cepeda)}</b></div>
       <div>🗳 Mesas de votación: <b>${m.n_puestos||'—'}</b></div>
       <div>📉 Brecha territorial: <b style="color:${(m.margen||0)>=0?COL_CEPEDA:COL_ASPRIELLA}">${(m.margen||0)>=0?'+':''}${m.margen||0} pts</b></div>
-      ${m.petro22 !== undefined ? `<div>🕐 Histórico Cepeda 2022: <b>${m.petro22}%</b></div>` : ''}
+      ${m.petro22 !== undefined ? `<div>🕐 Histórico Izquierda 2022: <b>${m.petro22}%</b></div>` : ''}
     </div>
   `;
 
