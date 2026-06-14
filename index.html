@@ -332,8 +332,8 @@
     <div class="table-card">
       <div class="table-header" style="background:var(--demo-joven-bg); border-bottom:1px solid #fca5a5;">
         <div>
-          <div class="section-title" style="margin:0; color:var(--demo-joven)">Demografía: Segmento Joven (18-28 años)</div>
-          <p style="font-size:12px;color:var(--texto-suave);margin-top:2px">Clasificación territorial según composición poblacional. Datos ordenables por la proporción de jóvenes (18-28 años).</p>
+          <div class="section-title" style="margin:0; color:var(--demo-joven)">Demografía: Distribución Etaria</div>
+          <p style="font-size:12px;color:var(--texto-suave);margin-top:2px">Clasificación territorial según composición poblacional. Datos ordenables.</p>
         </div>
       </div>
       <div style="overflow-x:auto">
@@ -342,9 +342,10 @@
             <tr>
               <th style="color:var(--demo-joven)" onclick="sortJovenes('municipio')">Municipio ↕</th>
               <th style="color:var(--demo-joven)" onclick="sortJovenes('depto')">Depto ↕</th>
-              <th style="color:var(--demo-joven)" onclick="sortJovenes('joven')">Composición Demográfica (Jóv - Adult - May) ↕</th>
-              <th style="color:var(--demo-joven)" onclick="sortJovenes('estado')">Mayoría Actual ↕</th>
+              <th style="color:var(--demo-joven)" onclick="sortJovenes('joven')">Composición Demográfica (Jóv - Otr - May) ↕</th>
+              <th style="color:var(--demo-joven)" onclick="sortJovenes('votos_jovenes')">Votantes Jóvenes ↕</th>
               <th style="color:var(--demo-joven)" onclick="sortJovenes('votos_total')">Votantes Totales ↕</th>
+              <th style="color:var(--demo-joven)" onclick="sortJovenes('estado')">Mayoría Actual ↕</th>
             </tr>
           </thead>
           <tbody id="jovenes-tbody"></tbody>
@@ -368,7 +369,8 @@
             <tr>
               <th style="color:var(--azul)" onclick="sortVolumen('municipio')">Municipio ↕</th>
               <th style="color:var(--azul)" onclick="sortVolumen('votos_total')">Total Votantes ↕</th>
-              <th style="color:var(--azul)" onclick="sortVolumen('petro22')">% Izq 2022 (Histórico) ↕</th>
+              <th style="color:var(--azul)" onclick="sortVolumen('votos_cepeda')">Votos Cepeda ↕</th>
+              <th style="color:var(--azul)" onclick="sortVolumen('votos_aspriella')">Votos Aspriella ↕</th>
               <th style="color:var(--azul)">Cepeda vs Aspriella</th>
               <th style="color:var(--azul)" onclick="sortVolumen('estado')">Mayoría Actual ↕</th>
               <th style="color:var(--azul)" onclick="sortVolumen('margen')">Brecha (Pts) ↕</th>
@@ -396,6 +398,7 @@ const DEPS = D.departamentos;
 // Config colors matching CSS
 const COL_CEPEDA = '#1a7a4a';
 const COL_ASPRIELLA = '#6366f1';
+const COL_BLANCO = '#e5e7eb'; 
 
 // App State
 let activeFilters = { dep: '', search: '', estado: '' }; 
@@ -428,9 +431,13 @@ function init() {
     const derPct = parseFloat(m.derecha_calc);
     m.estado = cepPct >= derPct ? 'ganada' : 'adversa';
     
-    // Totales Nacionales
+    // Totales Nacionales y cálculos extra
     const va = Math.round((derPct / 100) * vt);
     const vb = Math.max(0, vt - vc - va);
+    
+    // Guardamos variables para ordenar fácilmente después
+    m.votos_aspriella = va;
+    m.votos_jovenes = m.joven != null ? Math.round((m.joven / 100) * vt) : 0;
     
     totalVotos += vt;
     totalCepeda += vc;
@@ -586,7 +593,7 @@ function drawMap(zoomToBounds = false) {
       const s = m.swing || 0;
       if (s > 3) return COL_CEPEDA;
       if (s < -3) return COL_ASPRIELLA;
-      return '#e5e7eb'; // Color neutral para variación estable
+      return '#e5e7eb'; 
     }
     return colorByEstadoStr(m.estado);
   }
@@ -719,14 +726,13 @@ function drawFocoJoven() {
   
   conJovenes.sort((a,b) => {
     let av = a[sortColJoven], bv = b[sortColJoven];
-    if (sortColJoven === 'petro22') { av = av || 0; bv = bv || 0; }
     if (typeof av === 'string') return sortDirJoven * av.localeCompare(bv||'');
     return sortDirJoven * ((av||0) - (bv||0));
   });
 
   const topList = conJovenes.slice(0, 50);
   if (topList.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;color:#999;padding:20px;">Sin datos paramétricos.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:20px;">Sin datos paramétricos.</td></tr>';
     return;
   }
 
@@ -751,8 +757,9 @@ function drawFocoJoven() {
             <div style="width:${may}%; background:var(--demo-mayor);"></div>
           </div>
         </td>
-        <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
+        <td><b style="color:var(--morado)">${fmtVotos(m.votos_jovenes)}</b></td>
         <td><b>${fmtVotos(m.votos_total)}</b></td>
+        <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
       </tr>
     `;
   }).join('');
@@ -764,14 +771,13 @@ function drawAltoImpacto() {
   
   list.sort((a,b) => {
     let av = a[sortColVolumen], bv = b[sortColVolumen];
-    if (sortColVolumen === 'petro22') { av = av || 0; bv = bv || 0; }
     if (typeof av === 'string') return sortDirVolumen * av.localeCompare(bv||'');
     return sortDirVolumen * ((av||0) - (bv||0));
   });
 
   const topList = list.slice(0, 50);
   if (topList.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:20px;">Sin datos paramétricos.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:20px;">Sin datos paramétricos.</td></tr>';
     return;
   }
 
@@ -781,13 +787,13 @@ function drawAltoImpacto() {
     const pctC = parseFloat(m.cepeda || 0);
     const pctA = parseFloat(m.derecha_calc);
     const pctB = Math.max(0, 100 - pctC - pctA).toFixed(1);
-    const petroHtml = m.petro22 !== undefined ? m.petro22 + '%' : '—';
 
     return `
       <tr onclick="openModal('${m.slug}')">
         <td><div class="td-muni">${m.municipio}</div><div class="td-depto">${m.depto}</div></td>
         <td><b style="color:var(--azul);font-size:14px">${fmtVotos(m.votos_total)}</b></td>
-        <td style="color:var(--texto-suave)">${petroHtml}</td>
+        <td><b>${fmtVotos(m.votos_cepeda)}</b></td>
+        <td><b>${fmtVotos(m.votos_aspriella)}</b></td>
         <td style="min-width:140px;">
           <div style="font-size:11px;color:var(--texto-suave);margin-bottom:3px;display:flex;justify-content:space-between;">
             <span style="color:var(--cepeda)"><b>Cep:</b> ${pctC}%</span>
@@ -1023,8 +1029,6 @@ function openModal(slug) {
       <div>🗳 Mesas de votación: <b>${m.n_puestos||'—'}</b></div>
       <div>📉 Brecha territorial: <b style="color:${(m.margen||0)>=0?COL_CEPEDA:COL_ASPRIELLA}">${(m.margen||0)>=0?'+':''}${m.margen||0} pts</b></div>
     </div>
-
-    ${m.texto ? `<div style="background:var(--gris-claro);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--texto-suave);line-height:1.6;font-style:italic;">${m.texto}</div>` : ''}
   `;
 
   document.getElementById('modal-overlay').classList.add('open');
