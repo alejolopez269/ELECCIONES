@@ -18,8 +18,8 @@
     --cepeda-bg: #e8f5ee;
     --aspriella: #6366f1;
     --aspriella-bg: #e0e7ff;
-    --blanco-c: #4b5563; /* Gris oscuro para el texto "En Blanco" */
-    --blanco-bg: #f3f4f6; /* Gris muy claro para el fondo */
+    --blanco-c: #4b5563;
+    --blanco-bg: #f3f4f6;
     
     /* UI Colors */
     --azul: #2563eb;
@@ -100,12 +100,12 @@
   .top-info { flex: 1; min-width: 0; }
   .top-name { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .top-dep { font-size: 11px; color: var(--gris); }
+  .top-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; border: 1px solid transparent; }
   
   /* Status Badges */
   .badge-ganada { background: var(--cepeda-bg); color: var(--cepeda); }
   .badge-adversa { background: var(--aspriella-bg); color: var(--aspriella); }
-  .badge-blanco { background: var(--blanco-bg); color: var(--blanco-c); border: 1px solid #d1d5db; }
-  .top-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
+  .badge-blanco { background: var(--blanco-bg); color: var(--blanco-c); border-color: #d1d5db; }
   
   .top-votos { font-size: 12px; font-weight: 600; color: var(--texto-suave); flex-shrink: 0; }
 
@@ -121,11 +121,11 @@
   td { padding: 8px 12px; vertical-align: middle; }
   .td-muni { font-weight: 600; }
   .td-depto { font-size: 11px; color: var(--gris); }
-  .estado-pill { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .estado-pill { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; border: 1px solid transparent; }
   
   .pill-ganada { background: var(--cepeda-bg); color: var(--cepeda); }
   .pill-adversa { background: var(--aspriella-bg); color: var(--aspriella); }
-  .pill-blanco { background: var(--blanco-bg); color: var(--blanco-c); border: 1px solid #d1d5db; }
+  .pill-blanco { background: var(--blanco-bg); color: var(--blanco-c); border-color: #d1d5db; }
   
   .pct-bar-wrap { display: flex; align-items: center; gap: 6px; }
   .pct-bar-bg { flex: 1; height: 5px; background: var(--gris-claro); border-radius: 3px; overflow: hidden; min-width: 40px; }
@@ -210,16 +210,16 @@
     </div>
     <div class="header-stats">
       <div class="hstat">
-        <div class="hstat-num" id="h-votos-totales">—</div>
-        <div class="hstat-label">Total Votantes</div>
-      </div>
-      <div class="hstat">
-        <div class="hstat-num" id="h-votos-cepeda">—</div>
+        <div class="hstat-num" id="h-votos-cepeda" style="color:#4ade80">—</div>
         <div class="hstat-label">Votos Cepeda</div>
       </div>
       <div class="hstat">
-        <div class="hstat-num" id="h-pct-cepeda">—</div>
-        <div class="hstat-label">% Cepeda</div>
+        <div class="hstat-num" id="h-votos-aspriella" style="color:#a5b4fc">—</div>
+        <div class="hstat-label">Votos Aspriella</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num" id="h-votos-blanco" style="color:#d1d5db">—</div>
+        <div class="hstat-label">Votos En Blanco</div>
       </div>
     </div>
   </div>
@@ -239,8 +239,8 @@
       <label>Mayoría Electoral</label>
       <select id="f-estado">
         <option value="">Cualquiera</option>
-        <option value="ganada">Mayoría Cepeda</option>
-        <option value="adversa">Mayoría Aspriella</option>
+        <option value="ganada">Cepeda</option>
+        <option value="adversa">Aspriella</option>
         <option value="disputa">En Blanco</option>
       </select>
     </div>
@@ -416,9 +416,24 @@ let leafletMap;
 let mapCirclesLayer;
 
 function init() {
-  document.getElementById('h-votos-totales').textContent = fmtVotos(D.resumen.votos_total);
-  document.getElementById('h-votos-cepeda').textContent = fmtVotos(D.resumen.votos_cepeda);
-  document.getElementById('h-pct-cepeda').textContent = D.resumen.cepeda + '%';
+  // Cálculo de votos aproximados para el Header Global
+  const totalCepeda = D.resumen.votos_cepeda || 0;
+  let totalAspriella = 0;
+  let totalBlanco = 0;
+
+  MUNIS_ARR.forEach(m => {
+    const pctC = m.cepeda || 0;
+    const pctA = m.derecha || 0;
+    const pctB = Math.max(0, 100 - pctC - pctA);
+    const vt = m.votos_total || 0;
+    
+    totalAspriella += (pctA / 100) * vt;
+    totalBlanco += (pctB / 100) * vt;
+  });
+
+  document.getElementById('h-votos-cepeda').textContent = fmtVotos(totalCepeda);
+  document.getElementById('h-votos-aspriella').textContent = fmtVotos(Math.round(totalAspriella));
+  document.getElementById('h-votos-blanco').textContent = fmtVotos(Math.round(totalBlanco));
 
   const sel = document.getElementById('f-dep');
   DEPS.sort((a,b) => a.depto.localeCompare(b.depto)).forEach(d => {
@@ -733,9 +748,14 @@ function drawAltoImpacto() {
   tbody.innerHTML = topList.map(m => {
     const margenSign = (m.margen||0) >= 0 ? '+' : '';
     const margenColor = (m.margen||0) >= 0 ? 'var(--cepeda)' : 'var(--aspriella)';
-    const votosOtros = Math.max(0, (m.votos_total || 0) - (m.votos_cepeda || 0));
-    const pctC = m.votos_total > 0 ? ((m.votos_cepeda / m.votos_total) * 100).toFixed(1) : 0;
-    const pctO = (100 - pctC).toFixed(1);
+    
+    const pctC = m.cepeda || 0;
+    const pctA = m.derecha || 0;
+    const votosOtros = Math.round((pctA / 100) * m.votos_total) || 0;
+    
+    // Normalizar para la barra visual (ignorando el blanco para que sume 100%)
+    const pctCNorm = (pctC + pctA > 0) ? (pctC / (pctC + pctA)) * 100 : 0;
+    const pctONorm = (pctC + pctA > 0) ? (pctA / (pctC + pctA)) * 100 : 0;
     const petroHtml = m.petro22 !== undefined ? m.petro22 + '%' : '—';
 
     return `
@@ -748,9 +768,9 @@ function drawAltoImpacto() {
             <span><b>Cep:</b> ${fmtVotos(m.votos_cepeda)}</span>
             <span><b>Asp:</b> ${fmtVotos(votosOtros)}</span>
           </div>
-          <div style="display:flex; height:6px; width:100%; border-radius:3px; overflow:hidden;">
-            <div style="width:${pctC}%; background:var(--cepeda);"></div>
-            <div style="width:${pctO}%; background:var(--aspriella);"></div>
+          <div style="display:flex; height:6px; width:100%; border-radius:3px; overflow:hidden; background:var(--gris-claro)">
+            <div style="width:${pctCNorm}%; background:var(--cepeda);"></div>
+            <div style="width:${pctONorm}%; background:var(--aspriella);"></div>
           </div>
         </td>
         <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
